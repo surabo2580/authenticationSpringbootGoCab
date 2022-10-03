@@ -1,5 +1,6 @@
 package com.knf.dev.controllers;
 
+import com.knf.dev.request.ChangePasswordRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,11 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.knf.dev.models.User;
 import com.knf.dev.repository.UserRepository;
@@ -75,4 +72,36 @@ public class AuthController {
 
 		return ResponseEntity.ok(new MessageResponse("user registered successfully!"));
 	}
+	@PutMapping("/change-password/{id}")
+	public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, @PathVariable(value = "id") Long id)
+	{
+		User user = userRepository.getByUserId(id);
+		//User user2=new User(user.getName(),user.getUsername(),user.getEmail(),user.getPassword(),user.getMobileNumber());
+		if(user == null) {
+			return ResponseEntity.notFound().build();
+		}
+		System.out.println(encoder.matches(changePasswordRequest.getOldPassword(),user.getPassword()));
+		System.out.println(user.getPassword());
+		if(encoder.matches(changePasswordRequest.getOldPassword(),user.getPassword()) &&
+				!encoder.matches(changePasswordRequest.getNewPassword(),user.getPassword())){
+			user.setPassword(encoder.encode(changePasswordRequest.getNewPassword()));
+			userRepository.save(user);
+			return ResponseEntity.ok(new MessageResponse("Password Updated successfully!"));
+		}
+		else if(!encoder.matches(changePasswordRequest.getOldPassword(), user.getPassword())){
+			return ResponseEntity.badRequest().body(new MessageResponse("Current Password is Wrong!"));
+		}
+		else if(encoder.matches(changePasswordRequest.getNewPassword(), user.getPassword())){
+			return ResponseEntity.badRequest().body(new MessageResponse("New Password same as Old Password!"));
+		}
+
+		else{
+			return ResponseEntity.badRequest().body(new MessageResponse("Credential are wrong!"));    }
+
+
+		//return ResponseEntity.ok().body(user2);
+		//return new ResponseEntity<List<Product>> productRepository.getById(fetchProduct.getUserid());
+	}
+
 }
+

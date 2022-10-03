@@ -13,12 +13,14 @@ public class CabBooking {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String username;
     private String pickup;
     private String drop;
     private String date;
     private String depart;
 
-    public CabBooking(String pickup,String drop,String date,String depart){
+    public CabBooking(String username,String pickup,String drop,String date,String depart){
+        this.username = username;
         this.pickup = pickup;
         this.drop= drop;
         this.date = date;
