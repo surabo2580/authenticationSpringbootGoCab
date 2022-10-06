@@ -29,4 +29,9 @@ public class CabBookingService {
         repo.deleteById(id);
     }
 
+    public CabBooking getCabWithId(Long id){
+        return repo.findById(id).get();
+
+    }
+
 }

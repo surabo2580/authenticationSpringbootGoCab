@@ -15,7 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,9 +77,21 @@ public class CabBookingController {
         return cab_service.getBookingList();
     }
 
+    @GetMapping("/getbook/{id}")
+    public CabBooking showProductWithId(@PathVariable("id") Long id){
+
+        return cab_service.getCabWithId(id);
+    }
+
     @DeleteMapping("/delete-booking/{id}")
     public void deleteBooking(@PathVariable("id") Long id){
         System.out.println("++++++"+id);
+        String currentTime = String.valueOf(java.time.Clock.systemUTC().instant());
+        List<String> dataBaseTime = new ArrayList();
+        dataBaseTime = Collections.singletonList(String.valueOf(bookingRepository.findById(id)));
+        System.out.println(dataBaseTime.get(0));
+        System.out.println(dataBaseTime + " is of type " + ((Object)dataBaseTime).getClass().getSimpleName());
+        System.out.println(dataBaseTime);
         cab_service.deleteById(id);
     }
 }
