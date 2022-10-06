@@ -9,4 +9,5 @@ public class BookingRequest {
     private String drop;
     private String date;
     private String depart;
+    private int price;
 }

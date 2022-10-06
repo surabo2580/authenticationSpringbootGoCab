@@ -55,7 +55,10 @@ public class CabBookingController {
 //		User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
 //				encoder.encode(signUpRequest.getPassword()), encoder.encode(signUpRequest.getConfirmpassword()),
 //				signUpRequest.getFirstname(),signUpRequest.getLastname(),signUpRequest.getPhone());
-        CabBooking cabBooking = new CabBooking(bookingRequest.getUsername(),bookingRequest.getPickup(), bookingRequest.getDrop(), bookingRequest.getDate(), bookingRequest.getDepart());
+        CabBooking cabBooking = new CabBooking(bookingRequest.getUsername(),bookingRequest.getPickup(), bookingRequest.getDrop(),
+                bookingRequest.getDate(), bookingRequest.getDepart(),
+                bookingRequest.getPrice());
+        System.out.println("price"+bookingRequest.getPrice());
 
         bookingRepository.save(cabBooking);
 
